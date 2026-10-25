@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Language Practice Hub - Weeks 1-12</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-language text-2xl text-amber-400"></i>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Korean Practice Hub</h1>
+                    <p id="header-subtitle" class="text-xs text-indigo-200">Interactive Practice Hub</p>
+                </div>
+            </div>
+            
+            <div id="stats-summary" class="flex items-center gap-4 text-sm bg-indigo-800/60 px-4 py-2 rounded-lg border border-indigo-700">
+                <div>Total: <span id="stat-total" class="font-bold">10</span></div>
+                <div>Answered: <span id="stat-completed" class="font-bold text-amber-300">0/10</span></div>
+                <div>Score: <span id="stat-score" class="font-bold text-emerald-400">0%</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+
+        <!-- Controls Dashboard -->
+        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div class="w-full sm:w-auto flex flex-wrap gap-4 items-center">
+                <!-- Week Selector -->
+                <div class="flex items-center gap-2">
+                    <label for="week-select" class="text-sm font-semibold text-slate-700">Week:</label>
+                    <select id="week-select" class="bg-slate-100 border border-slate-300 text-slate-800 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 outline-none font-medium">
+                        <option value="1">Week 1 Assignment</option>
+                        <option value="2">Week 2 Assignment</option>
+                        <option value="3">Week 3 Assignment</option>
+                        <option value="4">Week 4 Assignment</option>
+                        <option value="5">Week 5 Assignment</option>
+                        <option value="6">Week 6 Assignment</option>
+                        <option value="7">Week 7 Assignment</option>
+                        <option value="8">Week 8 Assignment</option>
+                        <option value="9">Week 9 Assignment</option>
+                        <option value="10">Week 10 Assignment</option>
+                        <option value="11">Week 11 Assignment</option>
+                        <option value="12">Week 12 Assignment</option>
+                    </select>
+                </div>
+
+                <!-- Mode Selector -->
+                <div class="flex items-center gap-2">
+                    <label for="mode-select" class="text-sm font-semibold text-slate-700">Mode:</label>
+                    <select id="mode-select" class="bg-slate-100 border border-slate-300 text-slate-800 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 outline-none font-medium">
+                        <option value="practice">Practice Mode (Instant Feedback)</option>
+                        <option value="test">Exam Mode (Hide Answers Until Submit)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="w-full sm:w-auto flex gap-2 justify-end">
+                <button id="reset-btn" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-sm transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Reshuffle & Reset
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="space-y-6">
+            <!-- Questions rendered via script -->
+        </div>
+
+        <!-- Submit Test Button for Exam Mode -->
+        <div id="exam-submit-container" class="hidden text-center">
+            <button id="submit-exam-btn" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md transition-colors">
+                Submit Exam & View Results
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm mt-auto border-t border-slate-700">
+        <p>Korean Language Practice Hub • All Weeks Combined</p>
+    </footer>
+
+    <script>
+        const weeksDataRaw = {
+            1: [
+                {
+                    id: 1, type: "multi",
+                    q: "Which THREE of the following statements about King Sejong the Great are true?",
+                    options: [
+                        "세종대왕, the fourth ruler of the Joseon Dynasty, was an innovative leader who made major contributions to Korean society and culture.",
+                        "훈민정음 literally means \"the correct sounds for educating people,\" and it is also an explanatory document written by King Sejong about the purpose and principles of 한자.",
+                        "He said, \"I have created 28 letters because I felt compassion for the people who cannot express their thoughts.\"",
+                        "The Korean alphabet, 한글 was created in 1443 by a group of scholars from 집현전, under King Sejong the Great's direction.",
+                        "한자 is his most lasting legacy, and he is called \"the father of Hanja.\"",
+                        "He believed that everyone should have access to education regardless of social class, and 한글 made literacy easier for the sake of the upper class."
+                    ],
+                    correct: [0, 2, 3]
+                },
+                {
+                    id: 2, type: "multi",
+                    q: "Which THREE of the following statements about the Korean writing system are true?",
+                    options: [
+                        "Vowels in 한글 are based on three fundamental shapes 'ㆍ', 'ㅡ', and 'ㅣ', which represent the sky, the earth, and humans, respectively.",
+                        "The original Hangeul had 28 letters, while modern Hangeul orthography uses 24 basic letters: 14 consonants and 10 vowels.",
+                        "한글 is the official writing system of South and North Korea. In addition, some ethnic groups have adopted Hangeul as their official script.",
+                        "King Sejong's invention of Hangeul helped increase illiteracy and promote education throughout Korea. It has been praised by linguists worldwide as a unique, scientific, systematic, and ineffective writing system.",
+                        "The UNESCO King Sejong Literacy Prize was established in 2000.",
+                        "Koreans celebrate \"Hangeul Day (한글날)\" on May 5 each year."
+                    ],
+                    correct: [0, 1, 2]
+                },
+                {
+                    id: 3, type: "multi",
+                    q: "Which TWO of the following about the principles of Hangeul are NOT correct?",
+                    options: [
+                        "(ㆍ) + (ㅡ) = (ㅛ)",
+                        "(ㆍ) + (ㅣ) = (ㅓ)",
+                        "(ㅡ) + (ㆍ) = (ㅜ)",
+                        "ㄱ → ㅋ → ㅍ",
+                        "ㅅ → ㅈ → ㅊ",
+                        "ㅁ → ㅂ → ㅍ"
+                    ],
+                    correct: [0, 3]
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Which list shows the Korean consonants in the correct order from left to right in the diagram?",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A1_Q4.png" alt="Articulation Diagram" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["ㄱ ㄴ ㅎ", "ㄴ ㄱ ㅇ", "ㄷ ㄱ ㅎ", "ㄴ ㄷ ㅇ", "ㄱ ㄴ ㅍ"],
+                    correct: 1
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Which sound can be produced by the tip or blade of the tongue touching or approaching the upper teeth?",
+                    options: ["[ ㅁ ]", "[ ㅇ ]", "[ ㅅ ]", "[ ㄴ ]", "[ ㅂ ]"],
+                    correct: 3
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Which statement is correct about the Korean syllable structure?",
+                    options: [
+                        "Koreans write each letter separately in a row like ㅅ ㅏ ㄹ ㅏ ㅇ, instead of writing 사랑.",
+                        "In Hangeul, letters are written in sequence like English, but they are grouped into syllable blocks like puzzle pieces made from consonant-vowel combinations.",
+                        "Consonants have two placement rules: they are written to the right side of vertical vowels, and above the horizontal vowels.",
+                        "A Korean syllable follows (C)V(C): (Consonant)-Vowel-(Consonant). The vowel is the core of the syllable, and the consonants are optional."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Which is NOT correct about the Korean syllable structure and its examples?",
+                    options: [
+                        "V: 우유, 아우, 야",
+                        "VC: 악, 옷, 서울",
+                        "CV: 소, 나, 너",
+                        "CVC: 밥, 물, 한국"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 8, type: "multi",
+                    q: "Which TWO options are NOT correct about the basic consonants and vowels?",
+                    options: [
+                        "ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ",
+                        "ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ",
+                        "가 나 다 라 마 바 사 아 자 차 카 타 파 하",
+                        "ㄷ : [t/d], ㄹ : [r/l], ㅁ : [m]",
+                        "ㅂ : [b/p], ㅅ : [j], ㅇ : [ø/n]"
+                    ],
+                    correct: [1, 4]
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Which is the correct word with its corresponding image?",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A1_Q9.png" alt="Vocabulary Matching Options" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["우유", "오이", "이", "우", "아이"],
+                    correct: 2
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Listen carefully. Which does NOT match the given audio?",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk1-10.m4a",
+                    options: ["세종대왕님, 안녕하세요?", "감사합니다!", "존경합니다!", "사랑합니다!"],
+                    correct: 0
+                }
+            ],
+            2: [
+                {
+                    id: 1, type: "single",
+                    q: "Match each letter to its sound value.",
+                    content: `
+                        <div class="my-3 overflow-x-auto">
+                            <table class="min-w-full text-sm text-left border border-slate-200 rounded-lg">
+                                <thead class="bg-slate-100 font-semibold border-b">
+                                    <tr><th class="p-2.5 border-r">Letter</th><th class="p-2.5">Sound Value</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="p-2 border-r font-bold">1. ㅇ</td><td class="p-2">a. [null (ø)/ŋ]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">2. ㄷ</td><td class="p-2">b. [t/d]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">3. ㅎ</td><td class="p-2">c. [k']</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">4. ㅋ</td><td class="p-2">d. [kʰ]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">5. ㅆ</td><td class="p-2">e. [h]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">6. ㅍ</td><td class="p-2">f. [s]<br>g. [s']<br>h. [pʰ]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `,
+                    options: [
+                        "1a, 2b, 3e, 4d, 5g, 6h",
+                        "1a, 2c, 3e, 4b, 5d, 6f",
+                        "1a, 2c, 3e, 4b, 5g, 6d",
+                        "1e, 2b, 3f, 4c, 5a, 6h",
+                        "1e, 2c, 3b, 4a, 5d, 6f"
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Match each letter to its sound value.",
+                    content: `
+                        <div class="my-3 overflow-x-auto">
+                            <table class="min-w-full text-sm text-left border border-slate-200 rounded-lg">
+                                <thead class="bg-slate-100 font-semibold border-b">
+                                    <tr><th class="p-2.5 border-r">Letter</th><th class="p-2.5">Sound Value</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="p-2 border-r font-bold">1. ㅑ</td><td class="p-2">a. [yo]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">2. ㅠ</td><td class="p-2">b. [ya]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">3. ㅛ</td><td class="p-2">c. [yu]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">4. ㅕ</td><td class="p-2">d. [wə]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">5. ㅔ</td><td class="p-2">e. [yə]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">6. ㅝ</td><td class="p-2">f. [e]</td></tr>
+                                    <tr><td class="p-2 border-r font-bold">7. ㅚ</td><td class="p-2">g. [Ö/we]<br>h. [wi]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `,
+                    options: [
+                        "1b, 2c, 3a, 4e, 5f, 6d, 7g",
+                        "1b, 2g, 3a, 4d, 5f, 6i, 7h",
+                        "1e, 2c, 3a, 4b, 5f, 6i, 7g",
+                        "1e, 2g, 3a, 4b, 5f, 6d, 7h"
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Which has the correct Korean words for all the English words?",
+                    options: [
+                        "singer - 가수, father - 어머니, middle-aged man - 아저씨",
+                        "fly - 개미, sun - 해, country - 나라",
+                        "cow - 옷, baby - 아기, why - 왜",
+                        "India - 인도, pants - 바지, professor - 교수"
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Which statement has the correct Korean words for all the English words?",
+                    options: [
+                        "dad - 엄마, map - 지도",
+                        "baseball - 야구, talk - 이야기",
+                        "yoga - 요가, strawberry - 수박",
+                        "grape - 딸기, woman - 남자",
+                        "elephant - 코끼리, book - 칙"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Which has different pronunciations based on the “Batchim (syllable-final consonant)” sound?",
+                    options: ["악, 벽, 부엌, 밖", "집, 잎, 앞, 숲", "낮, 낯, 았, 곰", "히읗, 밑, 꽃, 낫"],
+                    correct: 2
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Which is the right word for the image?",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A2_Q6.png" alt="Computer Image" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["컴퓨티", "콤푸떠", "컴프타", "컴퓨터"],
+                    correct: 3
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Which is the correct word with its corresponding image?",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A2_Q7.png" alt="Vocabulary Matching Options" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["신발", "꽃", "히응", "숲"],
+                    correct: 1
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Listen carefully and choose the INCORRECT pronunciation.",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk2-8.m4a",
+                    options: [
+                        "간-난-단-란-만-반-산",
+                        "알-잘-찰-칼-탈-팔-할",
+                        "감-남-담-람-맘-밤-삼",
+                        "압-잡-찹-캅-탑-팝-합"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Listen carefully and choose the correct words.",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk2-9.m4a",
+                    options: ["발, 물, 눈, 밥", "물, 발, 밥, 눈", "밥, 발, 눈, 물", "불, 말, 밥, 눈"],
+                    correct: 3
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Listen carefully and choose the correct words.",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk2-10.m4a",
+                    options: [
+                        "병, 밤, 부엌, 삼, 남, 꼭, 밀, 술",
+                        "별, 밖, 부엌, 산, 낮, 꽃, 밑, 숲",
+                        "벽, 방, 부산, 살, 낯, 끝, 미, 솥",
+                        "볕, 반, 부장, 신, 낫, 곧, 면, 숙"
+                    ],
+                    correct: 1
+                }
+            ],
+            3: [
+                {
+                    id: 1, type: "single",
+                    q: "Which of the following does NOT match the pictures?",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A3_Q1.jpg" alt="Week 3 Question 1 Images" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["한국 사람, 미국 사람", "독일 사람, 의사", "일본 사람, 학생", "요리사, 군인"],
+                    correct: 1
+                },
+                {
+                    id: 2, type: "multi",
+                    q: "Which TWO are NOT correct?",
+                    options: [
+                        "존은 미국 사람예요.",
+                        "저는 한국 사람이예요.",
+                        "토마스는 영국 사람이예요.",
+                        "마리코는 일본 사람임다.",
+                        "프리야는 인도 사람입니다."
+                    ],
+                    correct: [0, 3]
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Which dialogue is correct?",
+                    options: [
+                        "강성재 씨는 선생님입니까? --- 네, 저는 학생입니다.",
+                        "반나서 반가워요. --- 만가워요.",
+                        "다니엘 씨는 어느 나라 사람이에요? --- 저는 영국 사람이에요.",
+                        "안녕히 가세요. --- 안녕히 개새요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 4, type: "single",
+                    q: "“조엘 씨는 인도 사람입니까?” Choose the correct response.",
+                    options: [
+                        "아니요, 인도 사람",
+                        "네, 인도 싸람",
+                        "네, 저는 독일 사람입니다.",
+                        "네, 저는 인도 사람이 아닙니다.",
+                        "아니요, 저는 호주 사람입니다."
+                    ],
+                    correct: 4
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "그거는 한국 지도예요, 일본 지도예요?",
+                        "지민 씨는 한국 사람입니까? 직업은 무엇입니까?",
+                        "나나 씨는 중궁 사람이에요?",
+                        "저거는 모예요? 한눅어 책이예요?"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "아키라는 한국 사람이가 아닙니다. 일본 사람입니다.",
+                        "저는 의사가 아닙니다. 가수입니다.",
+                        "저 사랑은 마이클이 아닙니다. 존입니다.",
+                        "저는 기자가 아닙니다. 회사원입니다."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Which is NOT correct based on high formality?",
+                    options: [
+                        "켈리 씨는 의사예요? ⇄ 켈리 씨는 의사입니까?",
+                        "아니요, 저는 선생님이에요. ⇄ 아니요, 저는 선생님입니다.",
+                        "저는 독일 사람이에요. ⇄ 저는 독일 사람입니다.",
+                        "어느 나라 사람이에요? ⇄ 어느 나라 사람입니다?"
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "이민호 씨는 회사원이 아니에요.",
+                        "박은호 씨는 한국 사람.",
+                        "저는 파키스탄 사람이 아닙니다.",
+                        "아속가 선생님임다."
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Put the dialogue in the right order.<br><span class='text-xs font-normal text-slate-500'>(a) 안녕하세요? 저는 아툴이에요.<br>(b) 저는 인도 이에요.<br>(c) 만나서 반가워요, 이승우 씨.<br>(d) 반가워요. 아툴 씨는 어느 나라 사람이예요?<br>(e) 안녕하세요? 저는 이승우예요.</span>",
+                    options: ["a-b-c-d-e", "e-a-b-c-d", "a-d-b-c-e", "e-a-c-d-b", "a-e-c-d-b"],
+                    correct: 3
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the correct dialogue.",
+                    options: [
+                        "김지호 씨는 의사입니까? - 아니요, 저는 의사가 아닙니다.",
+                        "레오 씨는 독일 사람이에요? - 네, 저는 프랑스 사람이예요.",
+                        "바누는 영국 사람이 아니에요. - 어느 나라이예요?",
+                        "김지은 씨는 일본 사람입니까? - 아니요, 한국 사람입니까?"
+                    ],
+                    correct: 0
+                }
+            ],
+            4: [
+                {
+                    id: 1, type: "single",
+                    q: "Which dialogue is NOT correct?",
+                    options: [
+                        "물이 업써요? --- 아니요, 업써요.",
+                        "박승원 씨, 직업은 무엇입니까? --- 저는 기자입니다.",
+                        "이거는 뭐예요? --- 영어 공책이에요.",
+                        "그거는 한국 지도예요? --- 네, 이거는 한국 지도예요."
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Choose the correct response.<br><span class='text-xs font-normal text-slate-500'>“안녕하세요? 뮐러 씨는 영국 사람입니까?”</span>",
+                    options: [
+                        "네, 저는 영국 사람이 아니에요.",
+                        "네, 한국 사람입니다.",
+                        "아니요, 저는 독일 사람입니다.",
+                        "아니요, 저는 호주 사람이 아닙니다."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Choose the INCORRECT statement.",
+                    options: [
+                        "여러분, 안녕하세요?",
+                        "만나서 반갑습니다.",
+                        "저는 라툴입니다.",
+                        "저는 인도 사람입니다.",
+                        "주소는 학생입니다. IIT에 다닙니다.",
+                        "제 전공은 화학 공학(Chemical Engineering)입니다.",
+                        "감사합니다."
+                    ],
+                    correct: 4
+                },
+                {
+                    id: 4, type: "multi",
+                    q: "Listen carefully and choose THREE correct statements. (Trk 17)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk4-4_Trk_17edited.mp3",
+                    options: [
+                        "여자 이름은 니콜 존스입니다.",
+                        "남자(the man) 김민수 씨는 기자입니다.",
+                        "여자는 한국어 선생님입니다.",
+                        "여자는 캐나다 사람이 아닙니다. 미국 사람입니다.",
+                        "She gave her name card to him.",
+                        "There were three people in this conversation."
+                    ],
+                    correct: [0, 4, 5]
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Choose the INCORRECT statement about this.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A4_Q5.png" alt="Son Heung-min Business Card" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "안녕하십니까? 반갑습니다.",
+                        "제 이름은 손흥민입니다.",
+                        "저는 한국 사람입니다.",
+                        "제 국적은 축구 선수입니다.",
+                        "제 명함입니다."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Match each image to its corresponding Korean word.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A4_Q6.png" alt="Vocabulary Items" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "가방, 책, 볼펜, 필통",
+                        "지갑, 공책, 볼펜, 연필",
+                        "지갑, 책, 필통, 볼펜",
+                        "가방, 공책, 볼펜, 연필"
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Choose the correct response.<br><span class='text-xs font-normal text-slate-500'>“여자 친구 있어요?”</span>",
+                    options: [
+                        "네, 있어요. 제 여자 친구 이름은 어린이예요.",
+                        "네, 저는 남자 친구가 있어요.",
+                        "아니오, 저는 여자 친구가 많아요. (많다: to have many)",
+                        "아니, 없어. 제 여자 친구 이름은 지혜예요."
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Fill in the blank.<br><span class='text-xs font-normal text-slate-500'>“이거는 (________) 뭐예요? --- 휴대폰이에요.”</span>",
+                    options: ["한글", "한국 사람", "한국어로", "영어로"],
+                    correct: 2
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: ["한국어 사전 이써요?", "아니요, 업ㅅ어요.", "저거는 볼펜이에요?", "아니요, 연필예요."],
+                    correct: 2
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the correct response.<br><span class='text-xs font-normal text-slate-500'>“그것은 무엇입니까?”</span>",
+                    options: [
+                        "저거는 지도야.",
+                        "그거는 책니까?",
+                        "휴대폰이야?",
+                        "시계이에요.",
+                        "이것은 한국어 책입니다."
+                    ],
+                    correct: 4
+                }
+            ],
+            5: [
+                {
+                    id: 1, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>공책 좀 주세요.</span>",
+                    options: [
+                        "넙, 있어요.",
+                        "여기 있어요. 이천 원입니다.",
+                        "아니요, 연필하고 지우개하고 필통 주세요.",
+                        "이거는 공책이에요?"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 2, type: "multi",
+                    q: "Fill in the blanks. Choose TWO correct answers.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded block bg-slate-50 my-1 leading-relaxed'>지호 씨는 우산( &nbsp; ) 책( &nbsp; ) 휴대폰( &nbsp; ) 있어요.<br>물( &nbsp; ) 모자( &nbsp; ) 없어요.</span>",
+                    options: [
+                        "하고 - 하고 - 는 - 하고 - 은",
+                        "하고 - 하고 - 이 - 하고 - 가",
+                        "이랑 - 이랑 - 이 - 과 - 는",
+                        "과 - 과 - 은 - 랑 - 은",
+                        "와 - 와 - 이 - 과 - 가"
+                    ],
+                    correct: [1, 2]
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Put the dialogue in the correct order.<br><span class='text-xs font-normal text-slate-500'>a. 아주머니: 어서 오세요.<br>b. 아주머니: 여기 있어요. 2,500원이에요.<br>c. 아만: 우유 있어요?<br>d. 아주머니: 네, 있어요. 초코 우유하고 바나나 우유하고 딸기 우유가 있어요.<br>e. 아만: 바나나 우유하고 딸기 우유 주세요.<br>f. 아만: 여기 있습니다. 안녕히 계세요.</span>",
+                    options: ["a-b-d-c-e-f", "a-c-d-e-b-f", "a-e-c-d-b-f", "a-e-b-c-f-d"],
+                    correct: 1
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "연필과 지우개과 공책이 있어요.",
+                        "선생님와 학생이 있습니다.",
+                        "콜라랑 오렌지 주스는 없어요. 커피 우유가 있어요.",
+                        "휴대폰하고 휴지하고 물가 있어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Listen carefully and choose the correct picture. (Trk 27)<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>“________주세요.”</span>",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk5-5_Trk_27edited.mp3",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A5_Q5.png" alt="Dictionaries & Laptops" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["①", "②", "③"],
+                    correct: 2
+                },
+                {
+                    id: 6, type: "multi",
+                    q: "Read the following passage and choose THREE correct statements.<br><div class='my-2 p-3 bg-slate-100 border border-slate-300 rounded text-xs sm:text-sm leading-relaxed font-normal'>저는 아만이에요. 서울대학교 학생이에요. 제 방이에요.<br>침대와 책상, 의자가 있어요. 컴퓨터가 있어요. 텔레비전과 냉장고와 에어컨(AC)은 없어요. 저는 룸메이트가 있어요.<br>제 룸메이트는 한국 사람이에요. 이름은 이준호예요.<br>준호는 여자친구가 있어요. 여자친구 이름은 박지수예요.</div>",
+                    options: [
+                        "아만은 서울대학교 학생이에요.",
+                        "침대와 책상과 의자, 텔레비전이 있어요.",
+                        "아만의 방에는 냉장고하고 에어컨하고 TV가 없어요.",
+                        "아만의 룸메이트는 한국 사람 이준호예요.",
+                        "아만은 한국 사람 여자 친구가 있어요.",
+                        "지수는 준호와 아만 친구예요."
+                    ],
+                    correct: [0, 2, 3]
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Match each image with the corresponding Korean expression.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A5_Q7.png" alt="Daily Activities Images" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "책을 읽다, 옷을 사다, 운동하다, 일하다",
+                        "공부하다, 영화를 보다, 자다, 숙제를 하다",
+                        "신문을 보다, 밥을 먹다, 일하다, 쇼핑하다",
+                        "책을 보다, 영화를 보다, 자다, 옷을 사다",
+                        "공부하다, 차를 마시다, 운동하다, 일하다"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Choose the sentence that is INCORRECT in meaning.",
+                    options: [
+                        "회사에서 산책하고 쇼핑해요.",
+                        "도서관에서 책을 읽고 공부해요.",
+                        "극장에서 영화를 봐요.",
+                        "백화점과 시장에서 쇼핑해요."
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 9, type: "multi",
+                    q: "Choose TWO INCORRECT responses.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>뭐 해요?</span>",
+                    options: ["밥을 먹아요.", "한국어 공부해요.", "지금 쉬어요.", "숙제를 하여요.", "산책해요."],
+                    correct: [0, 3]
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: ["아린이는 지금 친구를 만너요.", "바누는 매일 책을 일거요.", "저는 주말에 영화를 봐요.", "스티븐 씨는 내일 일하여요."],
+                    correct: 2
+                }
+            ],
+            6: [
+                {
+                    id: 1, type: "single",
+                    q: "Fill in the blanks.<br><div class='my-2 p-3 bg-slate-100 border border-slate-300 rounded text-base sm:text-lg font-bold leading-relaxed'>아비납___ 지금 학교 도서관___ 공부해요.<br>오늘 집___ 점심(lunch)___ 안 먹어요.</div>",
+                    options: [
+                        "는 -- 에서 -- 에 -- 를",
+                        "은 -- 에서 -- 에서 -- 을",
+                        "은 -- 에 -- 에 -- 을",
+                        "는 -- 에 -- 에서 -- 를"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Which is the INCORRECT translation into Korean?",
+                    options: [
+                        "What are you doing now, John? → 존 씨, 지금 뭐 해요?",
+                        "I am studying. What are you doing, Jenny? → 공부해요. 제니 씨는 뭐 해요?",
+                        "I am reading a book. → 저는 책을 쓰고 있어요.",
+                        "Are you reading a Korean book? → 한국어 책을 읽어요?"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Which is the INCORRECT translation into Korean?",
+                    options: [
+                        "Is Sumi studying in the library today? → 수미는 오늘 도서관에서 공부해요?",
+                        "No, she is not studying in the library. → 아니요, 도서관에서 공부 안 해요.",
+                        "Then, where is she studying? → 그럼, 어디에서 공부해요?",
+                        "Today she is studying at home. → 오늘은 집을 공부해요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>요즘 중국어를 배워요?</span>",
+                    options: [
+                        "네, 중국어를 마셔요.",
+                        "네, 일본 사람이 아니에요. 중국 사람이에요.",
+                        "아니요, 중국어를 안 배워요. 한국어를 배워요.",
+                        "아니요, 일본어를 공부 안 해요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Choose the correct question.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>____________________? -- 네, 많이(a lot) 봐요.</span>",
+                    options: [
+                        "요즘 어디에서 영화를 봐요?",
+                        "커피를 마셔요, 차를 마셔요?",
+                        "요즘 한국 드라마를 봐요?",
+                        "지금 일해요, 쉬고 있어요?",
+                        "오늘 친구를 만나요?"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Choose the INCORRECT response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2 rounded inline-block bg-slate-50 my-1'>주말에 백화점에서 옷을 사요?</span>",
+                    options: [
+                        "네, 저는 토요일에 쇼핑해요.",
+                        "네, 주말에 영화를 봐요. 백화점 극장에 가요.",
+                        "아니요, 저는 주말에 아르바이트가 있어요.",
+                        "아니요, 공부해요. 월요일에 시험이 있어요.",
+                        "아니요, 이번 주말은(this weekend) 일해요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "바누 씨는 고기를 먹어요?",
+                        "아니요, 저는 고기를 먹어요. 채식주의자(vegetarian)예요.",
+                        "그럼, 한국 김치는 먹어요?",
+                        "네, 김치를 좋아해요. 맛있어요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Listen carefully and choose the INCORRECT statement. (Trk 36)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk6-8_Trk_36edited.mp3",
+                    options: [
+                        "스티븐 씨는 지금 책을 읽고 있어요.",
+                        "나나 씨는 지금 친구를 만나고 있어요.",
+                        "아키라 씨는 지금 일 안 하고 운동해요.",
+                        "유진 씨는 집에서 텔레비전을 보고 있어요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 9, type: "multi",
+                    q: "Listen carefully and choose TWO correct statements. (Trk 37)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk6-9_Trk_37edited.mp3",
+                    options: [
+                        "마리코 씨는 지금 집에서 커피를 마셔요.",
+                        "마리코 씨와 줄리앙 씨가 커피숍에서 만나서 같이 책을 읽어요.",
+                        "줄리앙 씨는 학생 집에서 아르바이트가 있어요.",
+                        "줄리앙 씨는 식당에서 지금 밥을 먹어요.",
+                        "마리코 씨는 책을 읽고 줄리앙 씨는 프랑스어를 배워요.",
+                        "마리코 씨는 프랑스어를 가르쳐요."
+                    ],
+                    correct: [2, 3]
+                },
+                {
+                    id: 10, type: "multi",
+                    q: "맞는 것을 모두(all) 고르세요.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A6_Q10.png" alt="Text Message Conversation" class="max-w-xs sm:max-w-sm border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "이거는 스티븐과 유진의 문자 메시지(text message)예요.",
+                        "유진 씨는 지금 도서관에서 공부를 안 해요.",
+                        "스티븐 씨는 지금 언어교육원에서 한국어를 공부해요.",
+                        "유진 씨하고 스티븐 씨는 학생 식당에서 같이 밥을 먹어요.",
+                        "오늘 정우 씨와 스티븐 씨가 만나서 불고기를 먹어요."
+                    ],
+                    correct: [0, 2, 4]
+                }
+            ],
+            7: [
+                {
+                    id: 1, type: "multi",
+                    q: "Choose TWO INCORRECT phonetic representations.",
+                    options: ["밥을[바울]", "독일[도길]", "우산이[우사니]", "읽어요[익러요]", "집에서[지베서]"],
+                    correct: [0, 3]
+                },
+                {
+                    id: 2, type: "single",
+                    q: "“여기 이거는 한국어로 뭐예요?”",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A7_Q2.png" alt="Singing Room Diagram" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["PC방", "책방", "찜질방", "노래방"],
+                    correct: 3
+                },
+                {
+                    id: 3, type: "single",
+                    q: "“여기는 어디예요?”",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A7_Q3.png" alt="Sauna Room Diagram" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["빨래방", "미용실", "공항", "찜질방", "책방"],
+                    correct: 3
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Match each image to its corresponding Korean word.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A7_Q4.png" alt="Locations Matching" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "대사관, 은행, 병원, 미용실",
+                        "우체국, 은행, 약국, 가게",
+                        "대사관, 가게, 병원, 공항",
+                        "우체국, 가게, 약국, 미용실",
+                        "공항, 약국, 병원, 가게"
+                    ],
+                    correct: 0
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>수지가 지금 교실에 있어요?</span>",
+                    options: [
+                        "네, 교실에서 있어요.",
+                        "아니요, 교실에 없어요.",
+                        "네, 교실에 업써요.",
+                        "교실이 강남에 있어요.",
+                        "수지는 매일 학교에 가요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Choose the INCORRECT dialogue.",
+                    options: [
+                        "여기가 어디예요? – 서울역이에요.",
+                        "여기가 어디예요? – 네, 명동이에요.",
+                        "여기가 대학로예요? – 아니요, 여기는 인사동이에요.",
+                        "여기가 서울타워예요? – 네, 맞아요. 여기가 서울타워예요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>인사동에서 뭐 해요?</span>",
+                    options: [
+                        "네, 맞아요. 인사동이에요.",
+                        "거기 인사동이에요? 대학로예요?",
+                        "친구하고 같이 인사동에 가요.",
+                        "쇼핑을 안 했어요. 공부했어요.",
+                        "차를 마셔요. 인사동에는 찻집하고 식당이 있어요."
+                    ],
+                    correct: 4
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>지금 유진 씨가 어디에 있어요?</span>",
+                    options: [
+                        "공원이 멀어요(far).",
+                        "학생 식당이 있어요.",
+                        "명동에서 쇼핑하고 있어요.",
+                        "공항은 어디예요?",
+                        "병원에 안 가요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Choose the INCORRECT sentence.",
+                    options: [
+                        "서울 남산에서 뭐 해요?",
+                        "남산에서 서울 시내(downtown)를 구경해요.",
+                        "남산에는 서울타워가 있어요.",
+                        "그리고(and) 남산 도서관도 있어요.",
+                        "주말에 같이 남산에 가요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 10, type: "multi",
+                    q: "Choose TWO INCORRECT sentences.",
+                    options: [
+                        "여기가 명동이에요?",
+                        "아니요, 명동이 아니요.",
+                        "그럼 어디예요?",
+                        "여기는 대학로예요.",
+                        "대학로에 뭐 해요?",
+                        "연극을 봐요. 대학로에는 극장이 많이(a lot) 있어요."
+                    ],
+                    correct: [1, 4]
+                }
+            ],
+            8: [
+                {
+                    id: 1, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“주말에 어디에 가요?”</span>",
+                    options: [
+                        "토요일에 해변(beach)에 갔어요.",
+                        "저는 일요일에 교회(church)에 가요.",
+                        "이번 주말에 회사에서 일했어요. 일이 많아요.",
+                        "오늘 학교에 안 와요. 수업이 없어요.",
+                        "강남역이 어디에 있어요?"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Using the map, answer the question appropriately.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“극장이 어디에 있어요?”</span>",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A8_Q2.png" alt="City Map Location" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "병원 뒤에 있어요.",
+                        "학교와 집 사이에(between) 있어요.",
+                        "백화점 앞에 있어요.",
+                        "공원 뒤에 백화점 옆에 있어요.",
+                        "은행 옆에 있어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Using the map, answer the question appropriately.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“아키라 씨 집이 어디에 있어요?”</span>",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A8_Q3.png" alt="Akira's House Map" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "학교 뒤에 백화점 앞에 있어요.",
+                        "우체국 앞에 백화점 맞은 편에(on the opposite side) 있어요.",
+                        "백화점 옆에 약국 앞에 있어요.",
+                        "학교 옆에 병원 뒤에 있어요.",
+                        "공원 옆에 병원 앞에 있어요."
+                    ],
+                    correct: 4
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Based on the map, choose the INCORRECT statement.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A8_Q4.png" alt="City Map Analysis" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "우체국은 은행 뒤에 있어요.",
+                        "백화점 앞에 학교 위에 극장이 있어요.",
+                        "일요일에 극장 옆에 공원 안에 벤치에서 만나요.",
+                        "병원 뒤에 약국에서 약(medicine)을 사요. (*사다: to buy)"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Using the map, answer the question appropriately.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“명동백화점이 어디에 있어요?”</span>",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A8_Q5.png" alt="Embassy & Department Store Map" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "한국 대사관 알아요? 대사관 안에 있어요.",
+                        "명동 백화점 몰라요? 그 앞에 있어요.",
+                        "대사관 알아요? 대사관 앞에 있어요.",
+                        "백화점에 가요? 백화점 몰라요(don't know).",
+                        "대사관 뒤로 가요. 거기에 있어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 6, type: "multi",
+                    q: "Listen carefully and choose TWO INCORRECT statements. (Trk 46)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk8-6_Trk_46edited.mp3",
+                    options: [
+                        "아키라 씨 여자 친구가 일본에서 오늘 한국에 와요.",
+                        "아키라 씨는 공항에 여자 친구를 만나러 가요.",
+                        "아키라 씨 여자 친구는 한국의 은행에서 일해요.",
+                        "중앙우체국 뒤에 대사관에서 아키라 씨와 나나 씨가 만나요.",
+                        "오늘 나나 씨는 우체국 근처(near) 중국 대사관에 가요."
+                    ],
+                    correct: [2, 3]
+                },
+                {
+                    id: 7, type: "multi",
+                    q: "Listen carefully and choose two Incorrect options",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk8-7_Trk_47edited.mp3",
+                    options: [
+                        "창문 아래 우산이 있고 휴대폰은 가방 안에 있어요.",
+                        "안경은 휴대폰 옆에 텔레비전 위에 있어요.",
+                        "냉장고에는 맥주가 없어요.",
+                        "The man said, \"Thank you.\""
+                    ],
+                    correct: [0, 1]
+                },
+                {
+                    id: 8, type: "multi",
+                    q: "맞는 것을 모두(all), 고르세요.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A8_Q8.png" alt="Julien's Letter" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "줄리앙의 방은 서울의 기숙사에 있어요.",
+                        "줄리앙은 언어교육원에서 일해요.",
+                        "기숙사 방 책상에 어머니하고 아버지 사진이 있어요.",
+                        "줄리앙은 오늘 인사동에서 한국 친구를 만나요.",
+                        "줄리앙의 반에는 미국, 중국, 일본 사람이 같이 있어요.",
+                        "줄리앙은 반 친구를 사랑해요."
+                    ],
+                    correct: [0, 4]
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Choose the right phonetic representation.",
+                    options: ["식당[식짱]", "학생[학생]", "책방[책짱]", "약국[약꾹]", "극장[극짱]"],
+                    correct: 3
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the INCORRECT response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“여기는 서울 인사동이에요. 인사동에서 뭐 해요?”</span>",
+                    options: [
+                        "가게에서 기념품(souvenir)을 짜요.",
+                        "찻집에서 차를 마셔요.",
+                        "식당에서 한국 음식을 먹어요.",
+                        "갤러리에서 그림 구경을 해요.",
+                        "거리(road)를 구경해요."
+                    ],
+                    correct: 0
+                }
+            ],
+            9: [
+                {
+                    id: 1, type: "single",
+                    q: "Read the numbers in Korean.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“2 4 6 8 10 12 and 30 50 70 90 100”</span>",
+                    options: [
+                        "일 삼 오 칠 구 심일과 이심 사심 육심 팔심 일백",
+                        "이 삼 육 파 구 십이과 삼십 오십 육심 팔십 백",
+                        "이 사 육 팔 십 십이와 삼십 오십 칠십 구십 백",
+                        "이 사 오 팔 십 심이과 삼십 유십 칠십 구십 일백"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 2, type: "single",
+                    q: "“오늘이 며칠이에요? 무슨 요일이에요?” Choose the correct response.",
+                    options: [
+                        "육월 육일이에요. 토요일이에요.",
+                        "유월 유일이에요. 일요일이에요.",
+                        "시월 십일일이에요. 월요일이에요.",
+                        "십월 십일이에요. 회요일이에요",
+                        "시일 시월이에요. 모요일이에요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Choose the correct question.<br><div class='my-1 p-2.5 bg-slate-50 border border-slate-300 rounded text-base sm:text-lg font-bold leading-relaxed'>A: _______________<br>B: 3월 15일이에요.</div>",
+                    options: ["생얼이 몇 일이에요?", "오늘이 언제이에요?", "생일이 며칠이에요?", "생일이 무슨 요일이에요?", "오늘이 생일이에요?"],
+                    correct: 2
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Choose the INCORRECT sentence based on the image.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A9_Q4.png" alt="Thursday Taekwondo Activity" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "오늘이 금요일이에요? - 아니요, 목요일이에요.",
+                        "목요일에는 운동을 안 해요. 일요일에 태권도를 해요.",
+                        "내일은 무슨 요일이에요? - 금요일이에요.",
+                        "목요일에 뭐 해요? - 태권도를 배워요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Which sentence does NOT fit the flow of the dialogue?",
+                    options: [
+                        "지연: 5월 20일에 시간 있어요?",
+                        "민수: 20일이 무슨 요일이에요?",
+                        "지연: 일요일이에요. 일요일에 우리 집에서 생일 파티가 있어요.",
+                        "민수: 아, 고마워요. 일요일에는 한국 식당에서 약속이 있어서 파티에 못 가요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Choose the correct phonetic representation.",
+                    options: ["같이[가치]", "약속이[약소기]", "있어요[이서요]", "봐요[보아요]"],
+                    correct: 0
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "어제 무엇 했어요? 공부했어요?",
+                        "오늘은 토요일이라서 수업이가 없어요.",
+                        "시험(exam/test)이 언제 있어요? 며칠에 봐요?",
+                        "주말에 서울 공원에 운동하였어요.",
+                        "오늘이 무슨 요일이세요? 금요일이야?"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 8, type: "multi",
+                    q: "Choose the THREE correct conjugations.",
+                    options: [
+                        "만나다 → 만났아요",
+                        "좋아하다 → 좋아했어요",
+                        "먹다 → 머겄어요",
+                        "마시다 → 마셨어요",
+                        "읽다 → 읽었어요",
+                        "배우다 → 배우었어요",
+                        "듣다 → 들었어요"
+                    ],
+                    correct: [1, 3, 6]
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Choose the correct sentence.",
+                    options: [
+                        "어제는 금요일이에요. 오늘은 토요일이고 내일은 일요일이에요.",
+                        "저는 기자였어요. 지금은 가수예요.",
+                        "주말에 창문을 닦았아요.",
+                        "주말에 무엇 했어요? - 교회에 갓어요."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the correct sentence about the Korean “Happy Birthday Song.”",
+                    options: ["생일 추키합니다.", "새일 축하합니다.", "사랑하는 네 친구", "생일 축하합니다."],
+                    correct: 3
+                }
+            ],
+            10: [
+                {
+                    id: 1, type: "single",
+                    q: "Choose the correct response based on the image.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“지혜 씨, 주말에 뭐 했어요?”</span>",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A10_Q1.png" alt="Jihye's Weekend Activities" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "혼자 집에서 밥을 먹고 커피 마시고 음악을 들었어요.",
+                        "오늘 저녁에 친구하고 영화를 보고 밥을 먹어요.",
+                        "시장에서 쇼핑하고 집에서 혼자 TV를 봤어요.",
+                        "백화점에 가서 친구하고 같이 영화를 보고 옷을 샀어요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Put the dialogue in the correct order.<br><div class='my-2 p-3 bg-slate-100 border border-slate-300 rounded text-xs sm:text-sm leading-relaxed font-normal'>a. 정우: 주말에 뭐 했어요?<br>b. 정우: 거기에서 뭐 했어요?<br>c. 정우: 저는 집에서 요리하고 텔레비전 보고 쉬었어요.<br>d. 바누: 친구하고 같이 운동하고 사진을 찍었어요. 정우 씨는 뭐 했어요?<br>e. 바누: 첸나이 공원에 갔어요.</div>",
+                    options: ["a-e-b-d-c", "a-d-c-e-b", "a-d-b-e-c", "a-e-c-d-b"],
+                    correct: 0
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Choose the correct response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“주말에 어디에 갔어요? 누구하고 갔어요? 거기에서 뭐 했어요?”</span>",
+                    options: [
+                        "강남에 가요. 차를 마시고 노래방에 갔어요.",
+                        "남산 도서관에 갔어요. 혼자 갔고 공부해요.",
+                        "백화점에서 친구하고 같이 쇼핑합니다.",
+                        "대학로에서 친구를 만났어요. 같이 연극을 보고 찜질방에 갔어요.",
+                        "친구하고 같이 밥 먹었고 영화를 보세요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 4, type: "multi",
+                    q: "Listen carefully and choose TWO dates that were not mentioned. (Trk 56)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk10-4_Trk_56edited%20(1).mp3",
+                    options: ["6월 8일", "9월 5일", "7월 16일", "12월 23일", "2월 27일", "12월 30일"],
+                    correct: [3, 5]
+                },
+                {
+                    id: 5, type: "multi",
+                    q: "Listen carefully and choose TWO correct statements. (Trk 57)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk10-5_Trk_57edited.mp3",
+                    options: [
+                        "지연 씨는 주말에 집에 없고 쇼핑하러 나갔어요.",
+                        "영어 시험이 수요일에 있어요.",
+                        "마리코 씨는 친구 집에서 같이 한국어를 공부했어요.",
+                        "마리코 씨는 시험 끝나고 일본에 갔어요.",
+                        "마리코 씨는 한국에 30일에 와요."
+                    ],
+                    correct: [2, 4]
+                },
+                {
+                    id: 6, type: "multi",
+                    q: "Choose the THREE correct statements based on the calendar.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A10_Q6.png" alt="January Calendar with Solar and Lunar dates" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "음력(lunar) 설날(New Year's Day)은 일월 이십삼 일입니다.",
+                        "양력(solar) 1월 1일은 음력 12월 8일입니다.",
+                        "1월에는 일요일이 다섯 번(five times) 있습니다.",
+                        "설날 휴일(holidays)은 빨간색(red) 22, 23, 24, 25일, 월, 화, 수, 목요일입니다."
+                    ],
+                    correct: [0, 1, 2]
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Choose the INCORRECT statement about the schedules.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A10_Q7.png" alt="October Schedule Calendar" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "오늘은 10월 8일 화요일이고 내일은 9일 수요일이에요.",
+                        "어제는 월요일이었어요.",
+                        "한국어 시험은 목요일에 시작해서 시월 십 일 금요일에 끝나요.",
+                        "주말에 미용실에 갔어요.",
+                        "지난주(last week) 금요일에 아르바이트를 했어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 8, type: "multi",
+                    q: "“스티븐 씨는 오늘 어디에 안 갔어요?” 모두 고르세요.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A10_Q8.png" alt="Steven's Journal Entry and Place Options" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["① 학교", "② 강남역", "③ 은행", "④ 식당", "⑤ 백화점", "⑥ 집"],
+                    correct: [0, 2, 5]
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Read the journal and choose the INCORRECT statement.<br><div class='my-2 p-3 bg-slate-100 border border-slate-300 rounded text-xs sm:text-sm leading-relaxed font-normal'><strong>11월 10일 토요일</strong><br>오늘은 토요일이에요. 학교에 안 가요. 그래서 강남역에서 아키라 씨하고 미유키 씨를 만났어요. 미유키 씨는 아키라 씨 여자 친구예요. 어제 한국에 왔어요.<br>우리는 식당에서 한국 음식을 먹었어요. 밥을 먹고 백화점에 갔어요. 내일은 아키라 씨 생일이에요. 그래서 나는 백화점에서 모자를 샀어요. 모자는 아키라 씨 생일 선물이에요. 우리는 내일 아키라 씨 집에서 생일 파티를 해요.</div>",
+                    options: [
+                        "오늘 토요일에 학교에 안 가요. 일본 친구를 만났어요.",
+                        "미유키 씨는 11월 9일 금요일에 한국에 왔어요.",
+                        "토요일에 저와 아키라 씨와 미유키 씨는 한국 음식을 먹었어요.",
+                        "일요일에 우리는(we) 백화점에 가고 모자 선물을 샀어요.",
+                        "아키라 씨 생일 파티가 내일 일요일에 아키라 씨 집에서 있어요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the INCORRECT phonetic representation.",
+                    options: ["십삼(13)[십쌈]", "이십사(14)[이십싸]", "십육(16)[신육]", "이십구(29)[이십꾸]", "이십육(26)[이심눅]"],
+                    correct: 2
+                }
+            ],
+            11: [
+                {
+                    id: 1, type: "single",
+                    q: "Choose the option that includes an item NOT shown in the pictures.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A11_Q1.png" alt="Food and Items Grid" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "김치, 불고기, 갈비탕, 비빔밥",
+                        "냉면, 김밥, 라면, 김치찌개",
+                        "우동, 스파게티, 피자, 샌드위치",
+                        "사과, 수박, 귤, 딸기"
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Fill in the blank.<br><div class='my-1 p-2.5 bg-slate-50 border border-slate-300 rounded text-sm sm:text-base leading-relaxed'><strong>A: 첸나이에 있는 한국 식당에서 점심 먹었어요?</strong><br><strong>B: 네. 오늘 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 먹었어요.</strong></div>",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A11_Q2.png" alt="Bibimbap Bowl" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: ["김치볶음밥", "비빔밥", "김밥", "갈비탕", "김치찌개"],
+                    correct: 1
+                },
+                {
+                    id: 3, type: "multi",
+                    q: "Choose TWO correct options.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“이거는 ______에 천 원이에요.”</span>",
+                    options: ["일", "일 개", "하나", "두 개", "한", "둘 개"],
+                    correct: [2, 3]
+                },
+                {
+                    id: 4, type: "multi",
+                    q: "Choose THREE correct statements about the images.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A11_Q4.png" alt="Numbered Quantities of Food and Drinks" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "아이스크림 둘 개 주세요.",
+                        "주스 세 잔 주세요.",
+                        "녹차 네 잔 주세요.",
+                        "콜라 다섯 그릇 주세요.",
+                        "햄버거 일곱 개 주세요.",
+                        "라면 일곱 그릇 주세요."
+                    ],
+                    correct: [1, 2, 5]
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Choose the INCORRECT sentence.",
+                    options: [
+                        "같이 한국 음식 먹어요. 뭐 좋아해요?",
+                        "비빔밥을 좋아해요.",
+                        "그래요? 저는 김밥하고 떡볶이를 좋아해요.",
+                        "여기요. 김밥 하나, 떡볶이 하나 그리고 비빔밥 한 병 주세요."
+                    ],
+                    correct: 3
+                },
+                {
+                    id: 6, type: "single",
+                    q: "Choose the INCORRECT sentence.",
+                    options: [
+                        "어서 오세요. 여기 앉으세요.",
+                        "숙제를 하고 텔레비전을 보세요.",
+                        "이 빵 세 개하고 커피 한 잔 주세요.",
+                        "라면 세 그릇 주세요. 얼마예요?",
+                        "한국어 책을 읽고세요."
+                    ],
+                    correct: 4
+                },
+                {
+                    id: 7, type: "single",
+                    q: "Put the dialogue in the correct order.<br><div class='my-2 p-3 bg-slate-100 border border-slate-300 rounded text-xs sm:text-sm leading-relaxed font-normal'>a. 종업원: 어서 오세요. 여기 앉으세요.<br>b. 지훈: 그럼, 비빔밥 한 그릇하고 갈비탕 한 그릇 주세요.<br>c. 지훈: 메뉴 좀 주세요.<br>d. 유진: 저는 비빔밥을 좋아해요.<br>e. 종업원: 네, 여기 있어요.<br>f. 지훈: 유진 씨는 뭐 좋아해요?<br>g. 종업원: 네, 잠깐만 기다리세요.</div>",
+                    options: [
+                        "a-b-c-d-f-g-e",
+                        "a-c-e-f-d-b-g",
+                        "a-c-f-e-d-g-b",
+                        "a-f-d-c-g-b-e",
+                        "a-f-c-e-d-b-g"
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 8, type: "multi",
+                    q: "Choose THREE INCORRECT conjugations.",
+                    options: [
+                        "많다 → 많아요",
+                        "복잡하다 → 복잡해요",
+                        "덥다 → 더워요",
+                        "똑똑하다 → 똑똑해요",
+                        "괜찮다 → 괜찮해요",
+                        "예쁘다 → 예쁘요",
+                        "싸다 → 싸아요"
+                    ],
+                    correct: [4, 5, 6]
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Choose the most appropriate response.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“한국 음식 어때요? 맛있어요?”</span>",
+                    options: [
+                        "네, 아주 아주 멋있어요.",
+                        "아니요, 인도 음식이 매워요.",
+                        "네, 아주 맛있고 건강에도 좋아요.",
+                        "오렌지는 크고 한국 귤은 작아요.",
+                        "아니요, 한국 드라마가 재밌어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 10, type: "single",
+                    q: "Choose the INCORRECT sentence.",
+                    options: [
+                        "햄버거 두 개하고 오렌지 주스 두 잔 주세요.",
+                        "학교가 재밌고 좋아요. 학교에서 한국어랑 축구도 배워요.",
+                        "어제 날씨가 좋아요. 한강(Han river) 공원에 갔어요.",
+                        "주말에 영화를 봤어요. 아주(very) 재밌었어요."
+                    ],
+                    correct: 2
+                }
+            ],
+            12: [
+                {
+                    id: 1, type: "multi",
+                    q: "Choose TWO AWKWARD sentences.",
+                    options: [
+                        "메뉴 좀 주세요. 물도 주세요.",
+                        "어제 청바지를 샀어요. 그리고 운동화도 샀어요.",
+                        "도서관에서 책을 읽어요. 집에서는도 책을 읽어요.",
+                        "월요일에 라면을 먹었어요. 수요일에도 라면을 먹었어요.",
+                        "어제 시장에서 사과를 사고 귤들도 샀어요."
+                    ],
+                    correct: [2, 4]
+                },
+                {
+                    id: 2, type: "single",
+                    q: "Choose the correct statement based on the image.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A12_Q2.png" alt="Hana Mart and Seoul Super Price Comparison" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "하나마트에서 사과 여섯 개에 사천구백 원이에요.",
+                        "서울슈퍼에서는 사과 다섯 개에 사천사백 원이에요.",
+                        "사과는 서울슈퍼에서 사세요. 더 싸요.",
+                        "딸기 한 박스에 하나마트에서 6000원이에요.",
+                        "라면 다섯 개에 삼천 원이에요.",
+                        "주스 세 병은 유천사백오십 원이에요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 3, type: "single",
+                    q: "Fill in the blank with the most appropriate word.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“백화점에서 운동화가 ________. 운동화를 안 사요.”</span>",
+                    options: ["비싸요", "비싸요", "복잡해요", "재미있어요", "재미있어요"],
+                    correct: 0
+                },
+                {
+                    id: 4, type: "single",
+                    q: "Fill in the blank with the most appropriate word.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“저는 매일 한국어를 공부해요. 한국어 공부가 ________.”</span>",
+                    options: ["똑똑해요", "깨끗해요", "재미있어요", "좋아해요"],
+                    correct: 2
+                },
+                {
+                    id: 5, type: "single",
+                    q: "Fill in the blank with the most appropriate word.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“한국 식당에서 냉면이 ________. 그래서(so) 두 그릇 먹었어요.”</span>",
+                    options: ["따뜻했어요", "따뜻했어요", "맛있었어요", "비쌌었어요", "멋있었어요"],
+                    correct: 2
+                },
+                {
+                    id: 6, type: "single",
+                    q: "What is this about? Choose the correct topic.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“저는 시장에서 사과를 샀어요. 그리고 수박하고 딸기도 샀어요.”</span>",
+                    options: ["과자", "옷", "가방", "과일", "시장"],
+                    correct: 3
+                },
+                {
+                    id: 7, type: "single",
+                    q: "What is this about? Choose the correct topic.<br><span class='text-base sm:text-lg font-bold border border-slate-300 p-2.5 rounded inline-block bg-slate-50 my-1'>“저는 토요일에 친구하고 같이 운동했어요. 그리고 일요일에는 집에서 쉬었어요.”</span>",
+                    options: ["운동", "주말", "친구", "집", "쉬다"],
+                    correct: 1
+                },
+                {
+                    id: 8, type: "single",
+                    q: "Choose the INCORRECT statement about the receipt(영수증).",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A12_Q8.png" alt="Restaurant Receipt Breakdown" class="max-w-xs border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "식당에서 김치찌개 한 그릇에 오천 원입니다.",
+                        "비빔밥을 두 그릇 먹었어요. 만삼천 원이었어요.",
+                        "콜라는 한 병에 천 원이었어요.",
+                        "모두 이만천 원입니다."
+                    ],
+                    correct: 1
+                },
+                {
+                    id: 9, type: "single",
+                    q: "Listen carefully and Choose the correct statement. (Trk 66)",
+                    audio: "https://storage.googleapis.com/swayam-node1-production.appspot.com/assets/img/noc26_hs186/Wk12-9_Trk_66edited.mp3",
+                    options: [
+                        "케이크는 하나에 5,300원입니다.",
+                        "샌드위치 하나 2,700원, 아이스커피 한 잔 3,800원, 모두 5,500원입니다.",
+                        "아이스커피는 4,800원이 아니고 3,800원이에요.",
+                        "에스프레소 한 잔에 3,100원입니다. 정말 맛있어요."
+                    ],
+                    correct: 2
+                },
+                {
+                    id: 10, type: "multi",
+                    q: "Choose TWO INCORRECT phonetic representations.",
+                    options: [
+                        "좋아요[조아요]",
+                        "좋아해요[조아해요]",
+                        "싫어해요[시러해요]",
+                        "많아요[마하요]",
+                        "그릇하고[그르사고]",
+                        "앉으세요[안즈세요]"
+                    ],
+                    correct: [3, 4]
+                },
+                {
+                    id: 11, type: "multi",
+                    q: "Choose three incorrect statements about the advertisement.",
+                    image: `<div class="my-3 flex justify-center"><img src="Img/A12_Q11.png" alt="Second-hand Sale Item Flyer" class="max-w-md border border-slate-200 rounded-lg shadow-sm bg-white p-2"></div>`,
+                    options: [
+                        "1급 학생 윌슨이 미국에 가요. 그래서 물건을 팔아요.",
+                        "윌슨은 텔레비전을 백화점에서 삼십 오만 원에 샀어요. 리코컨이 있고 좋아요.",
+                        "책상하고 의자는 삼만 원이에요. 팔만 오천 원이었어요. 싸고 깨끗해요.",
+                        "책 3권에 5,000원이에요. 한 권은 2,000원이에요. 책이 많아요.",
+                        "윌슨 휴대폰 번호는 공일공 일일공육에 공칠일오예요."
+                    ],
+                    correct: [1, 2, 4]
+                }
+            ]
+        };
+
+        // Utility: Fisher-Yates Shuffle
+        function shuffleArray(arr) {
+            const array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let processedWeeksData = {};
+        let currentWeek = 1;
+        let userAnswers = {};
+        let submittedQuestions = {}; // Tracks locked answers per question in Practice Mode
+        let mode = "practice";
+        let submitted = false;
+
+        const weekSelect = document.getElementById("week-select");
+        const modeSelect = document.getElementById("mode-select");
+        const resetBtn = document.getElementById("reset-btn");
+        const quizContainer = document.getElementById("quiz-container");
+        const statTotal = document.getElementById("stat-total");
+        const statCompleted = document.getElementById("stat-completed");
+        const statScore = document.getElementById("stat-score");
+        const headerSubtitle = document.getElementById("header-subtitle");
+        const examSubmitContainer = document.getElementById("exam-submit-container");
+        const submitExamBtn = document.getElementById("submit-exam-btn");
+
+        // Prepare and shuffle week questions + options
+        function prepareWeekData(week) {
+            const originalQuestions = weeksDataRaw[week] || [];
+            const shuffledQuestions = shuffleArray(originalQuestions);
+
+            processedWeeksData[week] = shuffledQuestions.map(q => {
+                const indexedOptions = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+                const shuffledOptions = shuffleArray(indexedOptions);
+
+                let newCorrect;
+                if (q.type === "multi") {
+                    newCorrect = [];
+                    shuffledOptions.forEach((optObj, newIdx) => {
+                        if (q.correct.includes(optObj.originalIndex)) {
+                            newCorrect.push(newIdx);
+                        }
+                    });
+                } else {
+                    newCorrect = shuffledOptions.findIndex(optObj => optObj.originalIndex === q.correct);
+                }
+
+                return {
+                    ...q,
+                    options: shuffledOptions.map(o => o.text),
+                    correct: newCorrect
+                };
+            });
+        }
+
+        function init() {
+            prepareWeekData(currentWeek);
+
+            weekSelect.addEventListener("change", (e) => {
+                currentWeek = parseInt(e.target.value);
+                prepareWeekData(currentWeek);
+                resetState();
+                render();
+            });
+
+            modeSelect.addEventListener("change", (e) => {
+                mode = e.target.value;
+                resetState();
+                render();
+            });
+
+            resetBtn.addEventListener("click", () => {
+                prepareWeekData(currentWeek);
+                resetState();
+                render();
+            });
+
+            submitExamBtn.addEventListener("click", () => {
+                submitted = true;
+                render();
+                alert(`Exam Submitted! Your Score: ${calculateScore()} / ${processedWeeksData[currentWeek].length}`);
+            });
+
+            render();
+        }
+
+        function resetState() {
+            userAnswers[currentWeek] = {};
+            submittedQuestions[currentWeek] = {};
+            submitted = false;
+        }
+
+        function handleSelect(qId, optIdx, isMulti) {
+            if (!userAnswers[currentWeek]) userAnswers[currentWeek] = {};
+            if (!submittedQuestions[currentWeek]) submittedQuestions[currentWeek] = {};
+
+            // If question is locked in Practice Mode or exam submitted
+            if (mode === "practice" && submittedQuestions[currentWeek][qId]) return;
+            if (submitted) return;
+
+            const weekAnswers = userAnswers[currentWeek];
+
+            if (isMulti) {
+                if (!weekAnswers[qId]) weekAnswers[qId] = [];
+                const idx = weekAnswers[qId].indexOf(optIdx);
+                if (idx > -1) {
+                    weekAnswers[qId].splice(idx, 1);
+                } else {
+                    weekAnswers[qId].push(optIdx);
+                }
+            } else {
+                weekAnswers[qId] = optIdx;
+                // Single choice auto-submits instantly in Practice mode
+                if (mode === "practice") {
+                    submittedQuestions[currentWeek][qId] = true;
+                }
+            }
+            render();
+        }
+
+        function confirmMultiAnswer(qId) {
+            if (!submittedQuestions[currentWeek]) submittedQuestions[currentWeek] = {};
+            submittedQuestions[currentWeek][qId] = true;
+            render();
+        }
+
+        function calculateScore() {
+            let correctCount = 0;
+            const questions = processedWeeksData[currentWeek] || [];
+            const weekAnswers = userAnswers[currentWeek] || {};
+
+            questions.forEach(q => {
+                const ans = weekAnswers[q.id];
+                if (ans !== undefined) {
+                    if (q.type === "multi") {
+                        if (Array.isArray(ans) && ans.length === q.correct.length && ans.every(val => q.correct.includes(val))) {
+                            correctCount++;
+                        }
+                    } else {
+                        if (ans === q.correct) {
+                            correctCount++;
+                        }
+                    }
+                }
+            });
+            return correctCount;
+        }
+
+        function render() {
+            headerSubtitle.innerText = `Week ${currentWeek} Interactive Practice`;
+            const questions = processedWeeksData[currentWeek] || [];
+            statTotal.innerText = questions.length;
+
+            const weekAnswers = userAnswers[currentWeek] || {};
+            const weekSubmitted = submittedQuestions[currentWeek] || {};
+
+            const answeredCount = Object.keys(weekAnswers).filter(k => {
+                const val = weekAnswers[k];
+                return Array.isArray(val) ? val.length > 0 : val !== undefined;
+            }).length;
+
+            statCompleted.innerText = `${answeredCount}/${questions.length}`;
+            const score = calculateScore();
+            statScore.innerText = `${Math.round((score / questions.length) * 100)}%`;
+
+            if (mode === "test" && !submitted) {
+                examSubmitContainer.classList.remove("hidden");
+            } else {
+                examSubmitContainer.classList.add("hidden");
+            }
+
+            quizContainer.innerHTML = questions.map((q, displayIdx) => {
+                const isMulti = q.type === "multi";
+                const userAns = weekAnswers[q.id];
+                const isQuestionLocked = mode === "practice" ? !!weekSubmitted[q.id] : submitted;
+
+                return `
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex items-start justify-between gap-4">
+                            <h3 class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs px-2.5 py-1 rounded-md font-bold mr-2">Q${displayIdx + 1}</span>
+                                ${q.q}
+                            </h3>
+                        </div>
+
+                        ${q.content ? q.content : ''}
+
+                        ${q.audio ? `
+                            <div class="my-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100 flex items-center gap-3">
+                                <i class="fa-solid fa-volume-high text-indigo-600 text-lg"></i>
+                                <audio controls class="w-full h-10">
+                                    <source src="${q.audio}" type="audio/mp4">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        ` : ''}
+
+                        ${q.image ? q.image : ''}
+
+                        <div class="space-y-2">
+                            ${q.options.map((opt, optIdx) => {
+                                let btnClasses = "w-full text-left p-3.5 rounded-lg border transition-all text-sm sm:text-base flex items-center justify-between ";
+                                let isSelected = isMulti ? (userAns && userAns.includes(optIdx)) : (userAns === optIdx);
+
+                                if (isQuestionLocked) {
+                                    const isCorrectOpt = isMulti ? q.correct.includes(optIdx) : q.correct === optIdx;
+                                    if (isCorrectOpt) {
+                                        btnClasses += "bg-emerald-50 border-emerald-500 text-emerald-900 font-medium";
+                                    } else if (isSelected) {
+                                        btnClasses += "bg-rose-50 border-rose-500 text-rose-900";
+                                    } else {
+                                        btnClasses += "bg-slate-50 border-slate-200 text-slate-400 opacity-60";
+                                    }
+                                } else {
+                                    if (isSelected) {
+                                        btnClasses += "bg-indigo-50 border-indigo-500 text-indigo-900 font-medium ring-2 ring-indigo-200";
+                                    } else {
+                                        btnClasses += "bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-700";
+                                    }
+                                }
+
+                                return `
+                                    <button 
+                                        onclick="handleSelect(${q.id}, ${optIdx}, ${isMulti})" 
+                                        class="${btnClasses}"
+                                        ${isQuestionLocked ? "disabled" : ""}
+                                    >
+                                        <span class="flex items-center gap-2">
+                                            ${isMulti ? `<i class="fa-${isSelected ? 'solid fa-square-check text-indigo-600' : 'regular fa-square text-slate-400'}"></i>` : ''}
+                                            <strong class="mr-1">${String.fromCharCode(65 + optIdx)}.</strong> ${opt}
+                                        </span>
+                                    </button>
+                                `;
+                            }).join("")}
+                        </div>
+
+                        ${(mode === "practice" && isMulti && !isQuestionLocked) ? `
+                            <div class="pt-2 flex justify-end">
+                                <button 
+                                    onclick="confirmMultiAnswer(${q.id})" 
+                                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg font-semibold transition-colors disabled:opacity-50"
+                                    ${(!userAns || userAns.length === 0) ? "disabled" : ""}
+                                >
+                                    Submit Choice(s)
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
